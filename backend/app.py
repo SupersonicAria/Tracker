@@ -51,6 +51,19 @@ def get_events():
         event_list.append(format_event(event))
     return {'events': event_list}
 
+@app.route('/events/<id>', methods = ['GET'])
+def get_event(id):
+    event = Event.query.filter_by(id=id).one()
+    formatted_event = format_event(event)
+    return {'event': formatted_event}
+
+@app.route('/events/<id>', methods = ['DELETE'])
+def delete_event(id):
+    event = Event.query.filter_by(id=id).one()
+    db.session.delete(event)
+    db.session.commit()
+    return f'Event {id} Deleted!'
+
 
 
 
