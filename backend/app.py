@@ -35,7 +35,7 @@ def format_event(event):
 def hello():
     return 'HEY!'
 
-@app.route('/event', methods = ['POST'])
+@app.route('/events', methods = ['POST'])
 def create_event():
     description = request.json['description']
     event = Event(description)
@@ -43,6 +43,13 @@ def create_event():
     db.session.commit()
     return format_event(event)
 
+@app.route('/events', methods = ['GET'])
+def get_events():
+    events = Event.query.order_by(Event.id.asc()).all()
+    event_list = []
+    for event in events:
+        event_list.append(format_event(event))
+    return {'events': event_list}
 
 
 
