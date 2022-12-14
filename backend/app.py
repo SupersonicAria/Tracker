@@ -1,5 +1,5 @@
-import requests
-from flask import Flask
+
+from flask import Flask, request
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 from flask_migrate import Migrate
@@ -12,8 +12,6 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
-# if __name__ == '__main__':
-#     app.run()
 
 class Event(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -26,6 +24,28 @@ class Event(db.Model):
     def __init__(self, description):
         self.description = description
 
+def format_event(event):
+    return {
+        "description": event.description,
+        "id": event.id,
+        "created_at": event.created_at
+    }
+
 @app.route('/')
 def hello():
     return 'HEY!'
+
+@app.route('/event', methods = ['POST'])
+def create_event():
+    description = request.json['description']
+    event = Event(description)
+    db.session.add(event)
+    db.session.commit()
+    return format_event(event)
+
+
+
+
+
+if __name__ == '__main__':
+    app.run()
