@@ -64,8 +64,13 @@ def delete_event(id):
     db.session.commit()
     return f'Event {id} Deleted!'
 
-
-
+@app.route('/events/<id>', methods = ['PUT'])
+def update_event(id):
+    event = Event.query.filter_by(id=id)
+    description = request.json['description']
+    event.update(dict(description = description, created_at = datetime.utcnow()))
+    db.session.commit()
+    return {'event': format_event(event.one())}
 
 if __name__ == '__main__':
     app.run()
