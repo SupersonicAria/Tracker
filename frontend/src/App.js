@@ -44,9 +44,23 @@ function App() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const data = await axios.post(`${baseUrl}/events`, { description })
-      setEventsList([...eventsList, data.data]);
+      if (editDescription) {
+        const data = await axios.put(`${baseUrl}/events/${eventId}`, { description: editDescription });
+        const updatedEvent = data.data.event;
+        const updatedList = eventsList.map(event => {
+          if (event.id == eventId) {
+            return event = updatedEvent
+          }
+          return event
+        })
+        setEventsList(updatedList)
+      } else {
+        const data = await axios.post(`${baseUrl}/events`, { description })
+        setEventsList([...eventsList, data.data]);
+      }
       setDescription('');
+      setEditDescription('');
+      setEventId(null);
     } catch (err) {
       console.error(err.message);
     }
@@ -78,15 +92,15 @@ function App() {
             if (eventId == event.id) {
               return (
                 <li><form onSubmit={handleSubmit} key={event.id}>
-                <input
-                  onChange={(r) => handleChange(e, 'edit')}
-                  type='text'
-                  name='editDescription'
-                  id='editDescription'
-                  value={editDescription}
-                />
-                <button type='submit'>Submit</button>
-              </form></li>
+                  <input
+                    onChange={(r) => handleChange(e, 'edit')}
+                    type='text'
+                    name='editDescription'
+                    id='editDescription'
+                    value={editDescription}
+                  />
+                  <button type='submit'>Submit</button>
+                </form></li>
               )
             } else {
               return (
