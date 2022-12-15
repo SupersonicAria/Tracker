@@ -1,22 +1,30 @@
-import logo from './logo.svg';
+import {useEffect, useState} from 'react';
+import axios from "axios"
+import {format} from "date-fns";
+
 import './App.css';
 
+const baseUrl = "http://localhost:5000"
+
 function App() {
+  const [description, setDescription] = useState("");
+
+  const handleChange = e => {
+    setDescription(e.target.value);
+  }
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <form>
+          <label htmlFor='description'>Description</label>
+          <input
+          onChange={handleChange}
+          type='text'
+          name='description'
+          id='description'
+          value={description}
+          />
+        </form>
       </header>
     </div>
   );
