@@ -12,10 +12,16 @@ function App() {
   const handleChange = e => {
     setDescription(e.target.value);
   }
+
+  const handleSubmit = e => {
+    e.preventDefault();
+    console.log(description)
+  }
+
   return (
     <div className="App">
       <header className="App-header">
-        <form>
+        <form onSubmit={handleSubmit}>
           <label htmlFor='description'>Description</label>
           <input
           onChange={handleChange}
@@ -24,6 +30,7 @@ function App() {
           id='description'
           value={description}
           />
+          <button type='submit'>Submit</button>
         </form>
       </header>
     </div>
