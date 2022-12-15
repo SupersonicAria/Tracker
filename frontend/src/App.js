@@ -8,7 +8,9 @@ const baseUrl = "http://localhost:5000"
 
 function App() {
   const [description, setDescription] = useState("");
+  const [editDescription, setEditDescription] = useState("");
   const [eventsList, setEventsList] = useState([]);
+  const [eventId, setEventId] = useState(null);
 
   const fetchEvents = async () => {
     const data = await axios.get(`${baseUrl}/events`)
@@ -16,8 +18,12 @@ function App() {
     setEventsList(events);
   }
 
-  const handleChange = e => {
-    setDescription(e.target.value);
+  const handleChange = (e, field) => {
+    if (field == 'edit') {
+      setEditDescription(e.target.value)
+    } else {
+      setDescription(e.target.value)
+    }
   }
 
   const handleDelete = async (id) => {
@@ -28,6 +34,11 @@ function App() {
     } catch (err) {
       console.error(err.message)
     }
+  }
+
+  const handleEdit = (event) => {
+    setEventId(event.id);
+    setEditDescription(event.description);
   }
 
   const handleSubmit = async (e) => {
@@ -51,10 +62,11 @@ function App() {
         <form onSubmit={handleSubmit}>
           <label htmlFor='description'>Description</label>
           <input
-            onChange={handleChange}
+            onChange={(r) => handleChange(e, 'description')}
             type='text'
             name='description'
             id='description'
+            placeholder='Describe the event'
             value={description}
           />
           <button type='submit'>Submit</button>
@@ -63,12 +75,28 @@ function App() {
       <section>
         <ul>
           {eventsList.map(event => {
-            return (
-              <li style={{display : "flex"}} key={event.id}>
-                {event.description}
-                <button onClick={() => handleDelete(event.id)}>X</button>
-              </li>
-            )
+            if (eventId == event.id) {
+              return (
+                <li><form onSubmit={handleSubmit} key={event.id}>
+                <input
+                  onChange={(r) => handleChange(e, 'edit')}
+                  type='text'
+                  name='editDescription'
+                  id='editDescription'
+                  value={editDescription}
+                />
+                <button type='submit'>Submit</button>
+              </form></li>
+              )
+            } else {
+              return (
+                <li style={{ display: "flex" }} key={event.id}>
+                  {event.description}
+                  <button onClick={() => handleEdit(event)}>Edit</button>
+                  <button onClick={() => handleDelete(event.id)}>X</button>
+                </li>
+              )
+            }
           })}
         </ul>
       </section>
