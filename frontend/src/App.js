@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import axios from "axios"
-// import { format } from "date-fns";
+import { format } from "date-fns";
 
 import './App.css';
 
@@ -76,7 +76,7 @@ function App() {
         <form onSubmit={handleSubmit}>
           <label htmlFor='description'>Description</label>
           <input
-            onChange={(r) => handleChange(e, 'description')}
+            onChange={(e) => handleChange(e, 'description')}
             type='text'
             name='description'
             id='description'
@@ -93,7 +93,7 @@ function App() {
               return (
                 <li><form onSubmit={handleSubmit} key={event.id}>
                   <input
-                    onChange={(r) => handleChange(e, 'edit')}
+                    onChange={(e) => handleChange(e, 'edit')}
                     type='text'
                     name='editDescription'
                     id='editDescription'
@@ -105,6 +105,7 @@ function App() {
             } else {
               return (
                 <li style={{ display: "flex" }} key={event.id}>
+                  {format(new Date(event.created_at), "MM/dd, p")}: {" "}
                   {event.description}
                   <button onClick={() => handleEdit(event)}>Edit</button>
                   <button onClick={() => handleDelete(event.id)}>X</button>
