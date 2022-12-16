@@ -31,10 +31,6 @@ def format_event(event):
         "created_at": event.created_at
     }
 
-@app.route('/')
-def hello():
-    return 'HEY!'
-
 @app.route('/events', methods = ['POST'])
 def create_event():
     description = request.json['description']
