@@ -12,7 +12,7 @@ db = SQLAlchemy(app)
 CORS(app)
 migrate = Migrate(app, db)
 
-
+# table model
 class Event(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     description = db.Column(db.String(100), nullable=False)
@@ -31,6 +31,7 @@ def format_event(event):
         "created_at": event.created_at
     }
 
+#create event
 @app.route('/events', methods = ['POST'])
 def create_event():
     description = request.json['description']
@@ -39,6 +40,7 @@ def create_event():
     db.session.commit()
     return format_event(event)
 
+#see multiple events
 @app.route('/events', methods = ['GET'])
 def get_events():
     events = Event.query.order_by(Event.id.asc()).all()
@@ -47,12 +49,14 @@ def get_events():
         event_list.append(format_event(event))
     return {'events': event_list}
 
+#see one event
 @app.route('/events/<id>', methods = ['GET'])
 def get_event(id):
     event = Event.query.filter_by(id=id).one()
     formatted_event = format_event(event)
     return {'event': formatted_event}
 
+#delete event
 @app.route('/events/<id>', methods = ['DELETE'])
 def delete_event(id):
     event = Event.query.filter_by(id=id).one()
@@ -60,6 +64,7 @@ def delete_event(id):
     db.session.commit()
     return f'Event {id} Deleted!'
 
+#update event
 @app.route('/events/<id>', methods = ['PUT'])
 def update_event(id):
     event = Event.query.filter_by(id=id)
